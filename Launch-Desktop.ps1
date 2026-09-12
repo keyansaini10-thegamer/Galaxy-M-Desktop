@@ -1,19 +1,65 @@
 <#
 .SYNOPSIS
-    OpenDeX Workspace Launcher Framework v15.0 for Samsung One UI Core.
+    OpenDeX Workspace Launcher Framework v16.0 for Samsung One UI Core.
 .DESCRIPTION
-    Automates ADB pipelines, pulls down required tools automatically, and provisions displays.
+    Automates ADB pipelines, pulls down required tools automatically, provisions displays,
+    and includes an automated GitHub self-updater engine.
 .REPOSITORY
     GitHub - keyansaini10-thegamer/Galaxy-M-Desktop
 #>
 
+# Current local script version tag
+$CurrentVersion = "16.0"
+
 Clear-Host
-Write-Host "=========================================" -ForegroundColor Cyan
-Write-Host "  GALAXY M/F-SERIES OPEN-DEX LAUNCHER v15.0" -ForegroundColor Cyan
-Write-Host "=========================================" -ForegroundColor Cyan
-Write-Host "Initializing open-source connection link..." -ForegroundColor Yellow
+# =========================================================================
+# 🎨 COLORFUL CUSTOM ASCII ART BANNER BY KEYAN SAINI
+# =========================================================================
+Write-Host "████████╗██╗  ██╗███████╗    ██████╗ ███████╗██╗  ██╗" -ForegroundColor Cyan
+Write-Host "╚══██╔══╝██║  ██║██╔════╝    ██╔══██╗██╔════╝╚██╗██╔╝" -ForegroundColor Cyan
+Write-Host "   ██║   ███████║█████╗      ██║  ██║█████╗   ╚███╔╝ " -ForegroundColor Cyan
+Write-Host "   ██║   ██╔══██║██╔══╝      ██║  ██║██╔══╝   ██╔██╗ " -ForegroundColor Cyan
+Write-Host "   ██║   ██║  ██║███████╗    ██████╔╝███████╗██╔╝ ██╗" -ForegroundColor Cyan
+Write-Host "   ╚═╝   ╚═╝  ╚═╝╚══════╝    ╚═════╝ ╚══════╝╚═╝  ╚═╝" -ForegroundColor Cyan
+Write-Host "=====================================================" -ForegroundColor DarkGray
+Write-Host "        💥 GALAXY M/F-SERIES OPEN-DEX v$CurrentVersion 💥" -ForegroundColor Yellow
+Write-Host "               ⚙️ Created By Keyan Saini ⚙️" -ForegroundColor Green
+Write-Host "=====================================================" -ForegroundColor DarkGray
+
+# =========================================================================
+# 🔄 AUTOMATED GITHUB SELF-UPDATER ENGINE
+# =========================================================================
+Write-Host "`n🔍 Checking GitHub for project updates..." -ForegroundColor Yellow
+$RemoteUrl = "https://githubusercontent.com"
+
+try {
+    # Fetch the first 20 lines of the online script to look for the version tag
+    $RemoteScriptSnippet = Invoke-WebRequest -Uri $RemoteUrl -UseBasicParsing -TimeoutSec 5 -ErrorAction Stop | Select-String -Pattern '\$CurrentVersion = "(.*)"'
+    if ($RemoteScriptSnippet) {
+        $RemoteVersion = $RemoteScriptSnippet.Matches.Groups[1].Value
+        
+        # Compare versions
+        if ([version]$RemoteVersion -gt [version]$CurrentVersion) {
+            Write-Host "✨ A brand new update (v$RemoteVersion) is available on GitHub!" -ForegroundColor Green
+            $UpdateChoice = Read-Host "Would you like to automatically update your script now? (Y/N)"
+            
+            if ($UpdateChoice.ToUpper() -eq "Y") {
+                Write-Host "🌍 Downloading latest script from GitHub..." -ForegroundColor Cyan
+                $ScriptPath = $MyInvocation.MyCommand.Path
+                Invoke-WebRequest -Uri $RemoteUrl -OutFile $ScriptPath -UseBasicParsing -ErrorAction Stop
+                Write-Host "[✓] Script updated successfully! Please re-run the script to enjoy new features." -ForegroundColor Green
+                Exit
+            }
+        } else {
+            Write-Host "[✓] Your script is fully up to date!" -ForegroundColor Green
+        }
+    }
+} catch {
+    Write-Host "[⚠️ WARNING] Could not reach GitHub to check for updates. Running local version." -ForegroundColor DarkGray
+}
 
 # 1. Workspace Validation Check
+Write-Host "`nInitializing open-source connection link..." -ForegroundColor Yellow
 if (-not (Test-Path ".\scrcpy.exe") -or -not (Test-Path ".\adb.exe")) {
     Write-Host "[❌ ERROR] Core files missing! Place this script inside your scrcpy folder next to scrcpy.exe." -ForegroundColor Red
     Exit
@@ -72,7 +118,7 @@ if (-not $CheckApp -or -not $CheckPerm -or $CheckFreeform -ne "1") {
             Write-Host "[✓] Setup complete! Your phone is now fully configured." -ForegroundColor Green
             Start-Sleep -Seconds 2
         } else {
-            Write-Host "[❌ ERROR] Installation failed. Please ensure your Galaxy F23 screen is unlocked and try again." -ForegroundColor Red
+            Write-Host "[❌ ERROR] Installation failed. Please ensure your device screen is unlocked and try again." -ForegroundColor Red
             Exit
         }
     } else {
