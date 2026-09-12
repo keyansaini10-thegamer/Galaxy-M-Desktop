@@ -1,15 +1,15 @@
 <#
 .SYNOPSIS
-    OpenDeX Workspace Launcher Framework v16.0 for Samsung One UI Core.
+    OpenDeX Workspace Launcher Framework v17.0 for Samsung One UI Core.
 .DESCRIPTION
     Automates ADB pipelines, pulls down required tools automatically, provisions displays,
-    and includes an automated GitHub self-updater engine.
+    and includes an automated GitHub self-updater engine with a desktop shortcut generator.
 .REPOSITORY
     GitHub - keyansaini10-thegamer/Galaxy-M-Desktop
 #>
 
 # Current local script version tag
-$CurrentVersion = "16.0"
+$CurrentVersion = "17.0"
 
 Clear-Host
 # =========================================================================
@@ -33,10 +33,10 @@ Write-Host "`n🔍 Checking GitHub for project updates..." -ForegroundColor Yell
 $RemoteUrl = "https://githubusercontent.com"
 
 try {
-    # Fetch the first 20 lines of the online script to look for the version tag
+    # Fetch the online script snippet to check version tag
     $RemoteScriptSnippet = Invoke-WebRequest -Uri $RemoteUrl -UseBasicParsing -TimeoutSec 5 -ErrorAction Stop | Select-String -Pattern '\$CurrentVersion = "(.*)"'
     if ($RemoteScriptSnippet) {
-        $RemoteVersion = $RemoteScriptSnippet.Matches.Groups[1].Value
+        $RemoteVersion = $RemoteScriptSnippet.Matches.Groups.Value
         
         # Compare versions
         if ([version]$RemoteVersion -gt [version]$CurrentVersion) {
@@ -78,11 +78,34 @@ if (-not $DeviceLine) {
 $CleanID = ($DeviceLine -split '\s+').Trim()
 Write-Host "[✓] Device verified: $CleanID" -ForegroundColor Green
 
-# 3. SMART SETUP CHECKER & AUTO-DOWNLOAD/INSTALL ENGINE
+# 3. SMART SETUP CHECKER, AUTO-DOWNLOAD, & SHORTCUT CREATOR ENGINE
 Write-Host "`nAuditing mobile phone system environment parameters..." -ForegroundColor Yellow
 $CheckApp = .\adb.exe shell pm list packages com.farmerbb.taskbar
 $CheckPerm = .\adb.exe shell dumpsys package com.farmerbb.taskbar | Select-String -Pattern "android.permission.WRITE_SECURE_SETTINGS: granted=true"
 $CheckFreeform = .\adb.exe shell settings get global enable_freeform_support
+
+# --- AUTOMATED DESKTOP SHORTCUT MAKER ---
+$DesktopFolder = [Environment]::GetFolderPath("Desktop")
+$ShortcutPath = Join-Path $DesktopFolder "Launch OpenDeX Workspace.lnk"
+
+if (-not (Test-Path $ShortcutPath)) {
+    Write-Host "🖥️ Creating a quick launch icon on your Windows Desktop..." -ForegroundColor Cyan
+    try {
+        $WScriptShell = New-Object -ComObject WScript.Shell
+        $Shortcut = $WScriptShell.CreateShortcut($ShortcutPath)
+        $Shortcut.TargetPath = "powershell.exe"
+        # Binds execution policy parameters to let the script run with one click
+        $Shortcut.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$($MyInvocation.MyCommand.Path)`""
+        $Shortcut.WorkingDirectory = $PSScriptRoot
+        # Pulls a native system display icon layout to make it look sharp
+        $Shortcut.IconLocation = "shell32.dll, 15" 
+        $Shortcut.Save()
+        Write-Host "[✓] Desktop icon successfully created! You can now launch OpenDeX right from your home screen." -ForegroundColor Green
+    } catch {
+        Write-Host "[⚠️ WARNING] Could not create a desktop shortcut automatically." -ForegroundColor DarkGray
+    }
+}
+# --------------------------------------------
 
 if (-not $CheckApp -or -not $CheckPerm -or $CheckFreeform -ne "1") {
     Write-Host "[⚠️ WARNING] Your phone is missing the required layout settings to run DeX." -ForegroundColor Yellow
@@ -162,14 +185,8 @@ Write-Host "Session closed down cleanly. Cleaning environmental baseline..." -Fo
 .\adb.exe shell am broadcast -a com.farmerbb.taskbar.START_STOP_TASKBAR --ez start false | Out-Null
 .\adb.exe shell am force-stop com.farmerbb.taskbar | Out-Null
 
-# Force the default home action back onto Samsung One UI Home
-Write-Host "Restoring default launcher to Samsung One UI Home..." -ForegroundColor DarkGray
-.\adb.exe shell cmd package set-home-activity com.sec.android.app.launcher/.Launcher | Out-Null
+Write-Host "Restoring default launcher to Samsung One UI Home..." -ForegroundColor DarkGray.\adb.exe shell cmd package set-home-activity com.sec.android.app.launcher/.Launcher | Out-Null
 
-# Completely clear the system display policy to bring back the 3-button navigation bar layout instantly
-Write-Host "Restoring default 3-button navigation key layout..." -ForegroundColor DarkGray
-.\adb.exe shell settings put global policy_control null
-.\adb.exe shell wm overscan 0,0,0,0 | Out-Null
+Write-Host "Restoring default 3-button navigation key layout..." -ForegroundColor DarkGray.\adb.exe shell settings put global policy_control null.\adb.exe shell wm overscan 0,0,0,0 | Out-Null
 
-Write-Host "[✓] Baseline parameters successfully reset. Phone returned to stock normal state!" -ForegroundColor Green
-Write-Host "=========================================" -ForegroundColor Cyan
+Write-Host "[✓] Baseline parameters successfully reset. Phone returned to stock normal state!" -ForegroundColor GreenWrite-Host "=========================================" -ForegroundColor Cyan
