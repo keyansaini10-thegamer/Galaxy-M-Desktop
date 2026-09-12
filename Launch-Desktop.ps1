@@ -133,7 +133,8 @@ public struct RECT { public int Left; public int Top; public int Right; public i
 $User32 = Add-Type -MemberDefinition $User32Sig -Name Win32Utils -Namespace Win32 -PassThru
 
 # Hidden execution script background listener task loop
-$Task = System.Threading.Tasks.Task::Run({
+Start-Job -ScriptBlock {
+    param($Process, $TargetWindowName, $ContextMenu)
     $WShell = New-Object -ComObject Wscript.Shell
     $Rect = New-Object Win32.Win32Utils+RECT
     
@@ -159,7 +160,7 @@ $Task = System.Threading.Tasks.Task::Run({
             }
         }
     }
-})
+} -ArgumentList $Process, $TargetWindowName, $ContextMenu | Out-Null
 # =========================================================================
 
 Write-Host "OpenDeX Advanced Interface active. Monitoring layout configurations..." -ForegroundColor Green
