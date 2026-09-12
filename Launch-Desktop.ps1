@@ -9,7 +9,7 @@
 
 Clear-Host
 Write-Host "=========================================" -ForegroundColor Cyan
-Write-Host "  GALAXY M-SERIES OPEN-DEX LAUNCHER v1.2 " -ForegroundColor Cyan
+Write-Host "  GALAXY M-SERIES OPEN-DEX LAUNCHER v1.3 " -ForegroundColor Cyan
 Write-Host "=========================================" -ForegroundColor Cyan
 Write-Host "Initializing connection link..." -ForegroundColor Yellow
 
@@ -53,12 +53,12 @@ if (-not $DeviceLine) {
 $CleanID = $DeviceLine.Split("`t").Trim()
 Write-Host "[✓] Device connection verified: $CleanID" -ForegroundColor Green
 
-# 4. Fire up the isolated custom desktop display canvas using the Play Store drawer layout
+# 4. Fire up the isolated custom desktop display canvas using the persistent Taskbar UI layer
 Write-Host "Injecting isolated virtual landscape viewport (1920x1080) at 160 DPI..." -ForegroundColor Yellow
 Write-Host "Shortcut Map: Hold [Ctrl + Alt + F] inside the window to toggle Full-Screen Mode." -ForegroundColor Cyan
 
-# Uses a custom display layout optimized for secondary monitor interfaces
-.\scrcpy.exe --new-display=1920x1080/160 --window-title="OpenDeX Desktop Workspace" --shortcut-mod=lctrl,lalt --start-app=com.android.vending
+# Uses a custom display density layout optimized for a persistent open-source desktop environment
+.\scrcpy.exe --new-display=1920x1080/160 --window-title="OpenDeX Desktop Workspace" --shortcut-mod=lctrl,lalt --start-app=com.farmerbb.taskbar
 
 Write-Host "`n=========================================" -ForegroundColor Cyan
 Write-Host "Session closed down cleanly. Goodbye!" -ForegroundColor Gray
