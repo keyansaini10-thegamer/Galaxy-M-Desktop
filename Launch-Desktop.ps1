@@ -9,7 +9,7 @@
 
 Clear-Host
 Write-Host "=========================================" -ForegroundColor Cyan
-Write-Host "  GALAXY M-SERIES OPEN-DEX LAUNCHER v1.1 " -ForegroundColor Cyan
+Write-Host "  GALAXY M-SERIES OPEN-DEX LAUNCHER v1.2 " -ForegroundColor Cyan
 Write-Host "=========================================" -ForegroundColor Cyan
 Write-Host "Initializing connection link..." -ForegroundColor Yellow
 
@@ -50,15 +50,15 @@ if (-not $DeviceLine) {
 }
 
 # Extract and clean up the device ID string for UI feedback
-$CleanID = $DeviceLine.Split("`t")[0].Trim()
+$CleanID = $DeviceLine.Split("`t").Trim()
 Write-Host "[✓] Device connection verified: $CleanID" -ForegroundColor Green
 
 # 4. Fire up the isolated custom desktop display canvas using the Play Store drawer layout
-Write-Host "Injecting isolated virtual landscape viewport (1920x1080)..." -ForegroundColor Yellow
-Write-Host "Shortcut Map: Hold [Ctrl + Alt + F] inside the window to toggle Full-Screen Mode." -ForegroundColor LightCyan
+Write-Host "Injecting isolated virtual landscape viewport (1920x1080) at 160 DPI..." -ForegroundColor Yellow
+Write-Host "Shortcut Map: Hold [Ctrl + Alt + F] inside the window to toggle Full-Screen Mode." -ForegroundColor Cyan
 
 # Uses a custom display layout optimized for secondary monitor interfaces
-.\scrcpy.exe --new-display=1920x1080 --window-title="OpenDeX Desktop Workspace" --shortcut-mod=lctrl,lalt --start-app=com.android.vending
+.\scrcpy.exe --new-display=1920x1080/160 --window-title="OpenDeX Desktop Workspace" --shortcut-mod=lctrl,lalt --start-app=com.android.vending
 
 Write-Host "`n=========================================" -ForegroundColor Cyan
 Write-Host "Session closed down cleanly. Goodbye!" -ForegroundColor Gray
