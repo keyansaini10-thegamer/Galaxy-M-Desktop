@@ -1,17 +1,17 @@
-# Galaxy-M-Desktop Framework v17.4 by Keyan Saini
-$CurrentVersion = "17.4"
+# Galaxy-M-Desktop Framework v18.0 by Keyan Saini
+$CurrentVersion = "18.0"
 Clear-Host
 Write-Host "💥 GALAXY M/F-SERIES OPEN-DEX v$CurrentVersion 💥" -ForegroundColor Yellow
 Write-Host "⚙️ Created By Keyan Saini ⚙️" -ForegroundColor Green
 
 # 1. Check Files & Device
 if (-not (Test-Path ".\scrcpy.exe") -or -not (Test-Path ".\adb.exe")) {
-    Write-Host "[❌ ERROR] Core files missing!" -ForegroundColor Red
+    Write-Host "[X ERROR] Core files missing!" -ForegroundColor Red
     Exit
 }
 $Devices = .\adb.exe devices | Where-Object { $_ -match '\bdevice\b' }
 if (-not $Devices) { 
-    Write-Host "[❌ ERROR] Device link failed!" -ForegroundColor Red
+    Write-Host "[X ERROR] Device link failed!" -ForegroundColor Red
     Exit 
 }
 
@@ -21,42 +21,58 @@ $Lnk = Join-Path $Desk "Launch OpenDeX Workspace.lnk"
 if (-not (Test-Path $Lnk)) {
     try {
         $Wsh = New-Object -ComObject WScript.Shell
-        $S = $Wsh.CreateShortcut($Lnk)
-        $S.TargetPath = "powershell.exe"
-        $S.Arguments = "-NoProfile -ExecutionPolicy Bypass -WindowStyle Minimized -File `"$($MyInvocation.MyCommand.Path)`""
-        $S.WorkingDirectory = $PSScriptRoot
-        $S.IconLocation = "shell32.dll, 15"
-        $S.WindowStyle = 7
-        $S.Save()
-        Write-Host "[✓] Desktop shortcut created!" -ForegroundColor Green
+        $Shortcut = $Wsh.CreateShortcut($Lnk)
+        $Shortcut.TargetPath = "powershell.exe"
+        $ScriptPath = $MyInvocation.MyCommand.Path
+        $Shortcut.Arguments = "-NoProfile -ExecutionPolicy Bypass -WindowStyle Minimized -File `"$ScriptPath`""
+        $Shortcut.WorkingDirectory = $PSScriptRoot
+        $Shortcut.IconLocation = "shell32.dll, 15"
+        $Shortcut.WindowStyle = 7 
+        $Shortcut.Save()
+        Write-Host "[OK] Desktop shortcut successfully created!" -ForegroundColor Green
     } catch { 
-        Write-Host "[⚠️] Shortcut failed." -ForegroundColor DarkGray 
+        Write-Host "[!] Shortcut creation failed." -ForegroundColor DarkGray 
     }
 }
 
-# 3. Environment & Taskbar Automation
+# 3. Environment & Taskbar Auto-Installer
 $App = .\adb.exe shell pm list packages com.farmerbb.taskbar
 $Free = .\adb.exe shell settings get global enable_freeform_support
+
 if (-not $App -or $Free -ne "1") {
     if (-not $App) {
         if (-not (Test-Path ".\Taskbar.apk")) { 
-            Write-Host "[❌] Taskbar.apk missing!" -ForegroundColor Red
+            Write-Host "[X] Taskbar.apk missing!" -ForegroundColor Red
             Exit 
         }
+        Write-Host "-> Automatically installing Taskbar application..." -ForegroundColor Cyan
         .\adb.exe install -r -g ".\Taskbar.apk" | Out-Null
-        Start-Sleep -Sec 3
+        Start-Sleep -Seconds 3
     }
     .\adb.exe shell pm grant com.farmerbb.taskbar android.permission.WRITE_SECURE_SETTINGS | Out-Null
     .\adb.exe shell settings put global enable_freeform_support 1 | Out-Null
     .\adb.exe shell settings put global force_resizable_activities 1 | Out-Null
 }
 
-# 4. Start Desktop Environment
+# 4. Automated Preference Injection
+if (Test-Path ".\com.farmerbb.taskbar_preferences.xml") {
+    Write-Host "-> Injecting pre-configured OpenDeX interface settings..." -ForegroundColor Cyan
+    .\adb.exe push ".\com.farmerbb.taskbar_preferences.xml" "/data/local/tmp/prefs.xml" | Out-Null
+    .\adb.exe shell "run-as com.farmerbb.taskbar cp /data/local/tmp/prefs.xml /data/data/com.farmerbb.taskbar/shared_prefs/com.farmerbb.taskbar_preferences.xml" 2>$null
+    .\adb.exe shell "run-as com.farmerbb.taskbar chmod 660 /data/data/com.farmerbb.taskbar/shared_prefs/com.farmerbb.taskbar_preferences.xml" 2>$null
+    .\adb.exe shell "rm /data/local/tmp/prefs.xml" | Out-Null
+} else {
+    Write-Host "[!] Preference template missing. Running with defaults." -ForegroundColor DarkGray
+}
+
+# 5. Start Desktop Environment & Hide Navigation Buttons
+Write-Host "-> Activating desktop home workspace..." -ForegroundColor Yellow
 .\adb.exe shell cmd package set-home-activity com.farmerbb.taskbar/.activity.MainActivity | Out-Null
 .\adb.exe shell am broadcast -a com.farmerbb.taskbar.START_STOP_TASKBAR --ez start true | Out-Null
-Start-Sleep -Sec 1
+.\adb.exe shell settings put global policy_control immersive.navigation=*
+Start-Sleep -Seconds 1
 
-# 5. Launch Widescreen Display Layer
+# 6. Launch Widescreen Display Layer
 $Args = @(
     "--new-display=1920x1080/160",
     "--max-fps=60",
@@ -68,14 +84,14 @@ $Args = @(
 )
 Start-Process -FilePath ".\scrcpy.exe" -ArgumentList $Args -WindowStyle Normal -Wait
 
-# 6. Automated Teardown Reset
+# 7. Automated Teardown & Reset Navigation Buttons to Default
 Write-Host "`n=========================================" -ForegroundColor Cyan
 Write-Host "Session closed down cleanly. Restoring system profile..." -ForegroundColor Yellow
 
 .\adb.exe shell am broadcast -a com.farmerbb.taskbar.START_STOP_TASKBAR --ez start false | Out-Null
 .\adb.exe shell am force-stop com.farmerbb.taskbar | Out-Null
 .\adb.exe shell cmd package set-home-activity com.sec.android.app.launcher/.Launcher | Out-Null
-.\adb.exe shell settings put global policy_control null | Out-Null
+.\adb.exe shell settings put global policy_control null
 
 Write-Host "=========================================" -ForegroundColor Cyan
-Write-Host "[✓] Samsung One UI Restored!" -ForegroundColor Green
+Write-Host "[OK] Samsung One UI Restored!" -ForegroundColor Green
