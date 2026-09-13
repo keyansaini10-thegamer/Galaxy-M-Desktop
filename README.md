@@ -1,55 +1,46 @@
-# Galaxy-M-Desktop
+# 💥 Galaxy-M-Desktop: OpenDeX Workspace Launcher v17.4 💥
+> Bring the premium Samsung DeX desktop experience to Galaxy M-Series & F-Series smartphones!
 
-An automated PowerShell utility designed to force a standalone, persistent landscape Android desktop environment out of budget Samsung Galaxy M-series, A-series, and F-series devices via scrcpy virtual display density scaling and OpenDeX optimizations.
-
-## 🚀 Key Features
-* **Smart Setup Checker & Auto-Download Engine:** Automatically checks system requirements and handles internet downloads/installations directly for the user.
-* **Widescreen Desktop Shell:** Forces an immersive 1080p landscape canvas at a fluid 60 FPS.
-* **Automatic Session Teardown:** Instantly reverts your smartphone safely back to its stock One UI launcher configuration and restores the 3-button navigation keys.
-
-## 📋 Prerequisites
-
-Before running the script, make sure your phone's device environment is configured:
-
-1. **Developer Options Enabled** on your Samsung phone (Tap *Build Number* 7 times in your software settings).
-2. **USB Debugging** toggled ON in Developer Options.
-3. **Enable freeform windows** and **Force activities to be resizable** toggled ON inside Developer Options.
-4. Download the latest version of **scrcpy** for Windows.
-
-## 📂 Local Workspace Layout
-
-Place the `Launch-Desktop.ps1` script file directly inside your extracted scrcpy environment folder like this:
-
-```text
-C:\YourFolder\scrcpy-win64\
-  ├── adb.exe
-  ├── scrcpy.exe
-  └── Launch-Desktop.ps1  <-- Paste this script right here!
-```
-
-## 🎮 How to Launch
-
-1. Connect your Samsung device to your Windows PC using a high-quality USB data sync cable.
-2. Ensure your phone screen is unlocked.
-3. Open a PowerShell terminal window inside your project folder.
-4. Execute the deployment script:
-   ```powershell
-   .\Launch-Desktop.ps1
-   ```
-5. Click **Allow USB Debugging** on your phone display if prompted.
-
-## 🤝 Contributing & Making It Better!
-
-**Please help me make this project better and better!** 🌟
-
-Whether you want to optimize the PowerShell script, fix a bug, or suggest a cool new customization feature, I would love your support. Feel free to:
-* **Open an Issue** if you find something broken.
-* **Submit a Pull Request (PR)** with your code improvements.
-* **Leave feedback** on how it runs on your specific Samsung model.
-
-Let's build the ultimate budget Android desktop experience together!
+Created by **Keyan Saini** 🛠️  
+Featured on the [r/SamsungDex Reddit Community](https://reddit.com)! 🎉
 
 ---
 
+## 🌟 What is Galaxy-M-Desktop?
+Samsung restricts their official **DeX Mode** on budget and mid-range One UI Core devices (like the Galaxy M and F series). **Galaxy-M-Desktop** breaks through those limits! 
 
-# 🚀 Created By Keyan Saini
+Using an automated PowerShell ADB pipeline and the powerful `scrcpy` engine, this framework provisions a gorgeous, high-definition 1080p virtual desktop display layer right from your computer.
+
+---
+
+## 🔥 Key Features in v17.4
+
+* **⚡ Automated Run-Once Shortcut Maker:** Creates a customized Windows Desktop shortcut during your first execution so you can launch OpenDeX later in one single click.
+* **🤫 Minimized Execution Engine:** The behind-the-scenes PowerShell scripts run completely minimized in the Windows taskbar, giving you a clean, clutter-free workstation screen.
+* **🤖 Smart Setup Auto-Configuration:** Automatically audits your phone, downloads required background components if missing, and grants structural system settings (`WRITE_SECURE_SETTINGS`) over ADB without crashing.
+* **🖥️ Immersive 1080p Desktop Canvas:** Configures custom `scrcpy` parameters locked at a fluid 60 FPS with sharp text alignment rendering.
+* **🔄 Zero-Trace Automated Teardown:** The moment you close the desktop window, the script automatically cleans up your background settings and safely restores your phone back to stock Samsung One UI.
+
+---
+
+## 📋 Prerequisites & Requirements
+
+Before executing, make sure you have prepared the following parameters:
+1. **Windows PC** with PowerShell enabled.
+2. **Developer Options** activated on your Samsung phone with **USB Debugging** toggled ON.
+3. This script **must** be placed directly inside your local `scrcpy` folder (alongside `scrcpy.exe` and `adb.exe`).
+4. (Optional) Place a copy of `Taskbar.apk` in the same directory for fully automated offline mobile layout deployment.
+
+---
+
+## 🚀 Easy Installation & Launch
+
+1. Download or clone this repository into your local `scrcpy` directory.
+2. Connect your Samsung smartphone to your PC via a USB cable.
+3. Right-click `Launch-Desktop.ps1` and select **Run with PowerShell**.
+4. Allow the automatic environment audit to complete. A handy launch icon will appear on your Windows desktop for future sessions!
+
+---
+
+## 🤝 Contributing & Feedback
+Got suggestions or want to report bugs? Check out the active community discussions on our official **[Reddit Thread](https://reddit.com)**! Feel free to fork this project, open an issue, or submit a pull request to make budget desktop workflows even better.
