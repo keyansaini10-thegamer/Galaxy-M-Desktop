@@ -1,5 +1,5 @@
 # Galaxy-M-Desktop Framework v18.0 by Keyan Saini
-$CurrentVersion = "18.0"
+$CurrentVersion = "17.05"
 Clear-Host
 Write-Host "💥 GALAXY M/F-SERIES OPEN-DEX v$CurrentVersion 💥" -ForegroundColor Yellow
 Write-Host "⚙️ Created By Keyan Saini ⚙️" -ForegroundColor Green
