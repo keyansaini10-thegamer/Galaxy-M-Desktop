@@ -43,8 +43,15 @@ Before executing, make sure you have prepared the following parameters:
 
 ---
 
+## 🌐 Community & Technical Support
+Join the global discussion, share your custom interface setups, and get technical help on our official community platforms:
+
+* **XDA Developers Thread:** [Galaxy-M-Desktop Forum Hub](https://xdaforums.com/t/script-open-source-galaxy-m-desktop-v17-5-automated-1080p-dex-simulation-for-one-ui-core.4802071/) — Drop a comment, share your device model, or troubleshoot connection hurdles with the community.
+* **Bug Reports & Feature Requests:** Please use the official [GitHub Issues](https://github.com/keyansaini10-thegamer/Galaxy-M-Desktop/issues) tab here on the repository to report any automated shell script execution crashes.
+
+---
+
 ## 🤝 Contributing & Feedback
 Got suggestions or want to report bugs? Check out the active community discussions on our official **[Reddit Thread](https://reddit.com)**! Feel free to fork this project, open an issue, or submit a pull request to make budget desktop workflows even better.
-
 
 A special thank you to the developers of scrcpy and Taskbar!
