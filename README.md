@@ -52,6 +52,6 @@ Join the global discussion, share your custom interface setups, and get technica
 ---
 
 ## 🤝 Contributing & Feedback
-Got suggestions or want to report bugs? Check out the active community discussions on our official **[Reddit Thread](https://reddit.com)**! Feel free to fork this project, open an issue, or submit a pull request to make budget desktop workflows even better.
+Got suggestions or want to report bugs? Check out the active community discussions on our official **[Reddit Thread]([https://reddit.com](https://www.reddit.com/r/SamsungDex/comments/1wkjdx8/i_am_10_years_old_and_i_coded_a_powershell/))**! Feel free to fork this project, open an issue, or submit a pull request to make budget desktop workflows even better.
 
 A special thank you to the developers of scrcpy and Taskbar!
